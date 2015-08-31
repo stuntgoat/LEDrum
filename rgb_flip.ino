@@ -5,7 +5,7 @@ int redPin = 6;
 int greenPin = 3;
 int bluePin = 5;
 
-int PIEZO = A0;
+int PIEZO = A5;
 int THRESHOLD = 50; // Piezo sensitivity.
 
 // Flashing behavior.
@@ -57,14 +57,32 @@ void update_off()
   setColor(0, 0, 0);
 }
 
+void fake_blink()
+{
+
+  for (int i = 5; i < BLINK_LEN_COUNT; i += BLINK_LEN_INCR) {
+    update_color();
+    if (i >= BLINK_DIM_START) {
+      setColor(R->val / 2, G->val / 2, B->val / 2);
+    } else {
+      setColor(R->val, G->val, B->val);
+    }
+    delay(10);
+    update_off();
+    delay(10);
+
+  }
+  update_off();
+}
+
 void blink(COROUTINE_CONTEXT(coroutine))
 {
   COROUTINE_LOCAL(int, i);
 
   BEGIN_COROUTINE;
-
+  update_color();
   for (i = 5; i < BLINK_LEN_COUNT; i += BLINK_LEN_INCR) {
-    update_color();
+
     if (i >= BLINK_DIM_START) {
       setColor(R->val / 2, G->val / 2, B->val / 2);
     } else {
@@ -77,6 +95,7 @@ void blink(COROUTINE_CONTEXT(coroutine))
     COROUTINE_YIELD;
   }
   update_off();
+
   END_COROUTINE;
 }
 
@@ -115,10 +134,12 @@ void loop() {
   FIRST = analogRead(PIEZO);
 
   if (FIRST > THRESHOLD) {
-    delay(5);
+    delay(2);
     SECOND = analogRead(PIEZO);
     if (SECOND > FIRST) {
       coroutines.start(blink);
+      delay(1);
+      //fake_blink();
     }
   }
 }
