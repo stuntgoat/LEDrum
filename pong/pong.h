@@ -13,8 +13,12 @@ typedef struct Pong {
 
 } Pong;
 
+Pong* Initialize_low_high_Pong(int max_incr);
+
 Pong* pulser(Pong *pong);
 
-pulser_settings* get_pulser_settings(pulser_settings *settings);
+Pong* cycler(Pong *pong);
+
+bool coin(void);
 
 #endif // PONG_
