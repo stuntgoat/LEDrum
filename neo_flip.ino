@@ -8,7 +8,7 @@ int DIN = 3;
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(30, DIN);
 
 int PIEZO = A5;
-int THRESHOLD = 125; // Piezo sensitivity.
+int THRESHOLD = 60; // Piezo sensitivity.
 
 // Flashing behavior.
 int BLINK_LEN_COUNT= 25;
@@ -29,12 +29,13 @@ Coroutines<5> coroutines;
 
 void setColor(int red, int green, int blue)
 {
-  delayMicroseconds(6);
   uint32_t rgb = strip.Color(red, green, blue);
   for (int i = 0; i < 30; i++) {
     strip.setPixelColor(i, rgb);
   }
+  delayMicroseconds(7);
   strip.show();
+  delayMicroseconds(7);
 }
 
 void update_color()
@@ -46,9 +47,10 @@ void update_color()
 
 void update_off()
 {
-  delayMicroseconds(6);
   setColor(0, 0, 0);
+  delayMicroseconds(7);
   strip.show();
+  delayMicroseconds(7);
 }
 
 void blink(COROUTINE_CONTEXT(coroutine))
@@ -89,15 +91,24 @@ void setup()
   strip.show(); // Initialize all pixels to 'off'
 }
 
-
+int SECOND;
+int C = 0;
 void loop() {
   unsigned long time = millis();
   coroutines.update(time);
 
-  FIRST = analogRead(PIEZO);
 
+  if (C > 0) {
+    C -= 1;
+    return;
+  }
+  FIRST = analogRead(PIEZO);
+  C = 0;
   if (FIRST > THRESHOLD) {
-    coroutines.start(blink);
-    delay(2);
+    SECOND = analogRead(PIEZO);
+    if(SECOND > FIRST + 20) {
+      coroutines.start(blink);
+      C = 1;
+    }
   }
 }
