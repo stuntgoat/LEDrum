@@ -21,6 +21,15 @@ Your mileage may vary depending on which piezo buzzer you're using; with some th
 
 ```
 
+We're using an Arduino coroutine, `#include <Coroutines.h>`, library found here:
+
+[https://github.com/renaudbedard/littlebits-arduino/tree/master/Libraries/Coroutines](https://github.com/renaudbedard/littlebits-arduino/tree/master/Libraries/Coroutines)
+
+We're using the Adafruit Neopixel library, `#include <Adafruit_NeoPixel.h>`, found here:
+
+[https://github.com/adafruit/Adafruit_NeoPixel](https://github.com/adafruit/Adafruit_NeoPixel)
+
+
 Additional resources:
 
 [https://learn.adafruit.com/adafruit-neopixel-uberguide/overview](https://learn.adafruit.com/adafruit-neopixel-uberguide/overview)
